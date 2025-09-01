@@ -15,7 +15,18 @@ export function FavoritesProvider({ children }) {
       const res = await axios.get("http://localhost:3000/users/places");
       setFavorites(res.data?.places ?? []);
     } catch (e) {
-      setErrorFavorites(e?.message ?? "찜 목록을 불러오지 못했습니다.");
+      if(axios.isAxiosError(e)) {
+        const status = e.response?.status;
+
+        if(status === 404) {
+          setErrorFavorites("요청하신 데이터를 찾을 수 없습니다. (404)");
+        } else {
+          const msg = e.message || "찜 목록을 불러오지 못했습니다.";
+          setErrorFavorites(msg);
+        }
+      } else {
+        setErrorFavorites("알 수 없는 오류가 발생했습니다.");
+      }
     } finally {
       setLoadingFavorites(false);
     }

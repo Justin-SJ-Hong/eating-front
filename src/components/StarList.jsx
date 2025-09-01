@@ -18,7 +18,7 @@ export default function StarList() {
         return (
             <div className="bg-white flex flex-col justify-center p-3">
                 <h1 className="text-6xl flex justify-center mt-3! mb-3">찜한 맛집</h1>
-                <div className="flex justify-center p-6 text-gray-500">불러오는 중…</div>
+                <div className="flex justify-center p-6 text-gray-500">맛집을 불러오는 중입니다...</div>
             </div>
         );
     }
