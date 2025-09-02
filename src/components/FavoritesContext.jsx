@@ -46,6 +46,7 @@ export function FavoritesProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useFavorites() {
   const ctx = useContext(FavoritesContext);
   if (!ctx) throw new Error("useFavorites는 FavoritesProvider 내부에서만 사용하세요.");

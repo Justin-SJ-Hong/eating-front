@@ -6,14 +6,30 @@ export default function Restaurant({ id, name, imageUrl, image, onRemove }) {
 
     async function handleLike() {
         try {
-            await axios.post("http://localhost:3000/users/places", {
+            const res = await axios.post("http://localhost:3000/users/places", {
                 place: {
                     id,
                     name,
                     image, // 서버에는 원본 경로 저장 (예: images/xxx.jpg)
                 },
             });
-            await refreshFavorites(); // POST 성공 후 최신 찜 목록으로 갱신
+            // 응답 성공 여부 확인: 2xx 상태 + (선택) 서버에서 success 플래그를 내려주는 경우 함께 확인
+            const isHttpOk = res.status >= 200 && res.status < 300;
+            const hasSuccessFlag = res.data && typeof res.data.success !== "undefined";
+            const isSuccess = hasSuccessFlag ? Boolean(res.data.success) : isHttpOk;
+
+            if (isSuccess) {
+                alert("찜 처리에 성공했습니다.");
+                await refreshFavorites(); // 성공 시 최신 찜 목록으로 갱신
+            } else {
+                console.error("찜 처리 실패: 서버가 실패를 반환했습니다.", {
+                    status: res.status,
+                    data: res.data,
+                });
+                // 필요 시 사용자 알림 추가 가능
+                alert("찜 처리에 실패했습니다. 잠시 후 다시 시도해주세요.");
+            }
+
         } catch (e) {
             console.error("찜 처리 중 오류:", e);
         }
